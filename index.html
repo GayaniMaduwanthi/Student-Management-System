@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTrack - AI-Powered Student Management System</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --input-bg: #f8fafc;
+            --table-head: #f8fafc;
+            --avatar-bg: #e0e7ff;
+            --avatar-color: #4f46e5;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0b0f19;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --border-color: #334155;
+            --primary: #6366f1;
+            --primary-hover: #818cf8;
+            --input-bg: #0f172a;
+            --table-head: #0f172a;
+            --avatar-bg: #312e81;
+            --avatar-color: #818cf8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 30px 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1220px;
+            margin: auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            background: var(--card-bg);
+            padding: 20px 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-secondary {
+            background: var(--bg-color);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        /* AI Insights Banner */
+        .ai-banner {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+            padding: 16px 20px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .ai-icon {
+            font-size: 24px;
+            background: var(--primary);
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .ai-text h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 2px;
+        }
+
+        .ai-text p {
+            font-size: 13px;
+            color: var(--text-main);
+            opacity: 0.9;
+        }
+
+        /* Stats Dashboard Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--primary);
+        }
+
+        .stat-card h4 {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .stat-card p {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 920px) {
+            .main-layout { grid-template-columns: 1fr; }
+        }
+
+        .card-box {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            height: fit-content;
+        }
+
+        .card-box h3 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 18px;
+            color: var(--text-main);
+        }
+
+        .error-banner {
+            background: rgba(239, 68, 68, 0.12);
+            color: #ef4444;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 14px;
+            display: none;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            background: var(--input-bg);
+            color: var(--text-main);
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 5px;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-primary:active { transform: scale(0.98); }
+
+        .controls-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-bar {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            flex: 2;
+            min-width: 180px;
+            outline: none;
+            background: var(--input-bg);
+            color: var(--text-main);
+        }
+
+        .filter-select {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 13px;
+            flex: 1;
+            min-width: 140px;
+            background: var(--input-bg);
+            color: var(--text-main);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .student-table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th, td {
+            padding: 14px 12px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        th {
+            background: var(--table-head);
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        .student-info-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .student-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--avatar-bg);
+            color: var(--avatar-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .course-badge {
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* GPA Performance Badges */
+        .gpa-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .gpa-first {
+            background: rgba(16, 185, 129, 0.12);
+            color: #10b981;
+        }
+
+        .gpa-second {
+            background: rgba(59, 130, 246, 0.12);
+            color: #3b82f6;
+        }
+
+        .gpa-pass {
+            background: rgba(245, 158, 11, 0.12);
+            color: #f59e0b;
+        }
+
+        .gpa-tag {
+            font-size: 10px;
+            opacity: 0.85;
+            font-weight: 500;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .edit-btn {
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .edit-btn:hover { background: rgba(79, 70, 229, 0.2); }
+
+        .delete-btn {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .delete-btn:hover { background: rgba(239, 68, 68, 0.2); }
+
+        .toast {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #10b981;
+            color: white;
+            padding: 12px 22px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <span>🎓</span> EduTrack Portal
+        </div>
+        <div class="header-actions">
+            <button class="btn-secondary" onclick="exportToCSV()">📥 Export CSV</button>
+            <button class="btn-secondary" id="themeToggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+        </div>
+    </header>
+
+    <!-- AI Insights Banner -->
+    <div class="ai-banner">
+        <div class="ai-icon">✨</div>
+        <div class="ai-text">
+            <h4>AI Performance Advisor</h4>
+            <p id="aiInsightText">Analyzing student academic metrics...</p>
+        </div>
+    </div>
+
+    <!-- Statistics Overview -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h4>Total Enrolled Students</h4>
+            <p id="totalStudents">0</p>
+        </div>
+        <div class="stat-card">
+            <h4>First Class Honors (3.7+)</h4>
+            <p id="firstClassCount">0</p>
+        </div>
+        <div class="stat-card">
+            <h4>Overall Average GPA</h4>
+            <p id="avgGpa">0.00</p>
+        </div>
+    </div>
+
+    <!-- Main Content Layout -->
+    <div class="main-layout">
+        <!-- Add / Edit Form Section -->
+        <div class="card-box">
+            <h3 id="formTitle">Add New Student</h3>
+            <div class="error-banner" id="formError"></div>
+            
+            <form id="studentForm" onsubmit="handleFormSubmit(event)" novalidate>
+                <input type="hidden" id="studentId">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="fullName" placeholder="e.g., Kasun Perera" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" placeholder="student@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Enrolled Course</label>
+                    <select id="course" required>
+                        <option value="" disabled selected>Select course</option>
+                        <option value="Full-Stack Web Dev">Full-Stack Web Dev</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="UI/UX Engineering">UI/UX Engineering</option>
+                        <option value="Cyber Security">Cyber Security</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>GPA (0.00 - 4.00)</label>
+                    <input type="number" id="gpa" step="0.01" min="0" max="4" placeholder="3.75" required>
+                </div>
+                <button type="submit" class="btn-primary" id="submitBtn">Save Student Record</button>
+            </form>
+        </div>
+
+        <!-- Student Records Table Section -->
+        <div class="card-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3>Student Directory</h3>
+            </div>
+            
+            <!-- Controls Row: Search, Course Filter & Sorting -->
+            <div class="controls-row">
+                <input type="text" id="searchInput" class="search-bar" placeholder="Search by name or email..." onkeyup="renderTable()">
+                <select id="courseFilter" class="filter-select" onchange="renderTable()">
+                    <option value="All">All Courses</option>
+                    <option value="Full-Stack Web Dev">Full-Stack Web Dev</option>
+                    <option value="Data Science">Data Science</option>
+                    <option value="UI/UX Engineering">UI/UX Engineering</option>
+                    <option value="Cyber Security">Cyber Security</option>
+                </select>
+                <select id="sortOrder" class="filter-select" onchange="renderTable()">
+                    <option value="newest">Sort: Newest First</option>
+                    <option value="gpa-high">GPA: High to Low</option>
+                    <option value="gpa-low">GPA: Low to High</option>
+                    <option value="name-asc">Name: A to Z</option>
+                </select>
+            </div>
+            
+            <div class="student-table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 55px;">#ID</th>
+                            <th>Student Details</th>
+                            <th>Enrolled Course</th>
+                            <th>GPA & Standing</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody">
+                        <!-- Dynamic Records -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toastMsg">Success!</div>
+
+<script>
+    let students = JSON.parse(localStorage.getItem('eduTrackStudents')) || [
+        { id: 1, name: "Amaya Silva", email: "amaya@example.com", course: "Full-Stack Web Dev", gpa: 3.85 },
+        { id: 2, name: "Nuwan Bandara", email: "nuwan@example.com", course: "Data Science", gpa: 3.40 },
+        { id: 3, name: "Kavindi Perera", email: "kavindi@example.com", course: "UI/UX Engineering", gpa: 2.85 }
+    ];
+
+    let isEditing = false;
+
+    function showToast(message) {
+        const toast = document.getElementById('toastMsg');
+        toast.innerText = message;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 2400);
+    }
+
+    function showFormError(msg) {
+        const errBox = document.getElementById('formError');
+        errBox.innerText = msg;
+        errBox.style.display = 'block';
+    }
+
+    function clearFormError() {
+        document.getElementById('formError').style.display = 'none';
+    }
+
+    // Theme Toggle Function
+    function toggleTheme() {
+        const body = document.body;
+        const btn = document.getElementById('themeToggle');
+        if (body.getAttribute('data-theme') === 'dark') {
+            body.removeAttribute('data-theme');
+            btn.innerText = '🌙 Dark Mode';
+            localStorage.setItem('eduTrackTheme', 'light');
+        } else {
+            body.setAttribute('data-theme', 'dark');
+            btn.innerText = '☀️ Light Mode';
+            localStorage.setItem('eduTrackTheme', 'dark');
+        }
+    }
+
+    if (localStorage.getItem('eduTrackTheme') === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        document.getElementById('themeToggle').innerText = '☀️ Light Mode';
+    }
+
+    // Helper to get Initials for Avatars
+    function getInitials(name) {
+        return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    }
+
+    // Helper for GPA Academic Standing Badge
+    function getGpaBadge(gpa) {
+        if (gpa >= 3.70) {
+            return `<span class="gpa-pill gpa-first">${gpa.toFixed(2)} <span class="gpa-tag">• First Class</span></span>`;
+        } else if (gpa >= 3.00) {
+            return `<span class="gpa-pill gpa-second">${gpa.toFixed(2)} <span class="gpa-tag">• Second Class</span></span>`;
+        } else {
+            return `<span class="gpa-pill gpa-pass">${gpa.toFixed(2)} <span class="gpa-tag">• General</span></span>`;
+        }
+    }
+
+    // AI Performance Advisor Logic
+    function updateAIInsights() {
+        const aiText = document.getElementById('aiInsightText');
+        if (students.length === 0) {
+            aiText.innerText = "No student records available for AI analysis yet. Add records to generate insights.";
+            return;
+        }
+
+        const total = students.length;
+        const totalGpa = students.reduce((sum, s) => sum + s.gpa, 0);
+        const avg = totalGpa / total;
+        const firstClassCount = students.filter(s => s.gpa >= 3.70).length;
+        const firstClassPercent = Math.round((firstClassCount / total) * 100);
+
+        if (avg >= 3.40) {
+            aiText.innerText = `Excellent cohort performance! Average GPA stands at ${avg.toFixed(2)} with ${firstClassPercent}% achieving First Class honors. Keep up the high standards.`;
+        } else if (avg >= 3.00) {
+            aiText.innerText = `Stable academic standing. Average GPA is ${avg.toFixed(2)}. Consider organizing elective support sessions for students below 3.00.`;
+        } else {
+            aiText.innerText = `Attention required: Average GPA is currently ${avg.toFixed(2)}. Performance review recommended for courses with lower averages.`;
+        }
+    }
+
+    // Export to CSV with sequential ID matching table view
+    function exportToCSV() {
+        if (students.length === 0) {
+            alert('No student records available to export.');
+            return;
+        }
+
+        let csvContent = "data:text/csv;charset=utf-8,Student ID,Student Name,Email Address,Enrolled Course,GPA,Academic Standing\n";
+        
+        students.forEach((s, index) => {
+            const standing = s.gpa >= 3.70 ? "First Class" : (s.gpa >= 3.00 ? "Second Class" : "General");
+            csvContent += `${index + 1},"${s.name}","${s.email}","${s.course}",${s.gpa.toFixed(2)},"${standing}"\n`;
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "EduTrack_Students_Report.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showToast('📥 Student report exported to CSV');
+    }
+
+    function handleFormSubmit(e) {
+        e.preventDefault();
+        clearFormError();
+
+        const id = document.getElementById('studentId').value;
+        const name = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const course = document.getElementById('course').value;
+        const gpaVal = document.getElementById('gpa').value;
+        const gpa = parseFloat(gpaVal);
+
+        // Strict Validation Checks
+        if (name.length < 2) {
+            showFormError('⚠️ Please enter a valid full name.');
+            return;
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            showFormError('⚠️ Please enter a valid email address.');
+            return;
+        }
+        if (!course) {
+            showFormError('⚠️ Please select an enrolled course.');
+            return;
+        }
+        if (isNaN(gpa) || gpa < 0 || gpa > 4.0) {
+            showFormError('⚠️ GPA must be a valid number between 0.00 and 4.00.');
+            return;
+        }
+
+        // Duplicate Email Check
+        const duplicateEmail = students.find(s => s.email.toLowerCase() === email.toLowerCase() && s.id != id);
+        if (duplicateEmail) {
+            showFormError('⚠️ A student with this email address is already registered.');
+            return;
+        }
+
+        if (isEditing) {
+            students = students.map(s => s.id == id ? { id: Number(id), name, email, course, gpa } : s);
+            showToast('✓ Student details updated successfully');
+            isEditing = false;
+            document.getElementById('formTitle').innerText = 'Add New Student';
+            document.getElementById('submitBtn').innerText = 'Save Student Record';
+        } else {
+            const newStudent = {
+                id: Date.now(),
+                name,
+                email,
+                course,
+                gpa
+            };
+            students.unshift(newStudent);
+            showToast('✓ New student added successfully');
+        }
+
+        saveAndRefresh();
+        document.getElementById('studentForm').reset();
+        document.getElementById('studentId').value = '';
+    }
+
+    function editStudent(id) {
+        clearFormError();
+        const student = students.find(s => s.id === id);
+        if (!student) return;
+
+        document.getElementById('studentId').value = student.id;
+        document.getElementById('fullName').value = student.name;
+        document.getElementById('email').value = student.email;
+        document.getElementById('course').value = student.course;
+        document.getElementById('gpa').value = student.gpa;
+
+        isEditing = true;
+        document.getElementById('formTitle').innerText = 'Edit Student Details';
+        document.getElementById('submitBtn').innerText = 'Update Student Record';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function deleteStudent(id) {
+        if (confirm('Are you sure you want to delete this student record?')) {
+            students = students.filter(s => s.id !== id);
+            saveAndRefresh();
+            showToast('🗑️ Student record deleted');
+        }
+    }
+
+    function saveAndRefresh() {
+        localStorage.setItem('eduTrackStudents', JSON.stringify(students));
+        renderTable();
+        updateStats();
+        updateAIInsights();
+    }
+
+    function updateStats() {
+        document.getElementById('totalStudents').innerText = students.length;
+        
+        const firstClass = students.filter(s => s.gpa >= 3.70).length;
+        document.getElementById('firstClassCount').innerText = firstClass;
+
+        if (students.length === 0) {
+            document.getElementById('avgGpa').innerText = '0.00';
+            return;
+        }
+
+        const totalGpa = students.reduce((sum, s) => sum + s.gpa, 0);
+        const avg = (totalGpa / students.length).toFixed(2);
+        document.getElementById('avgGpa').innerText = avg;
+    }
+
+    function renderTable() {
+        const tbody = document.getElementById('studentTableBody');
+        const searchVal = document.getElementById('searchInput').value.toLowerCase();
+        const courseFilterVal = document.getElementById('courseFilter').value;
+        const sortOrder = document.getElementById('sortOrder').value;
+        tbody.innerHTML = '';
+
+        // 1. Filter
+        let filtered = students.filter(s => {
+            const matchSearch = s.name.toLowerCase().includes(searchVal) || s.email.toLowerCase().includes(searchVal);
+            const matchCourse = courseFilterVal === 'All' || s.course === courseFilterVal;
+            return matchSearch && matchCourse;
+        });
+
+        // 2. Sort
+        if (sortOrder === 'gpa-high') {
+            filtered.sort((a, b) => b.gpa - a.gpa);
+        } else if (sortOrder === 'gpa-low') {
+            filtered.sort((a, b) => a.gpa - b.gpa);
+        } else if (sortOrder === 'name-asc') {
+            filtered.sort((a, b) => a.name.localeCompare(b.name));
+        }
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px;">No matching student records found.</td></tr>`;
+            return;
+        }
+
+        filtered.forEach((s, index) => {
+            const initials = getInitials(s.name);
+            const gpaBadgeHTML = getGpaBadge(s.gpa);
+
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>#${index + 1}</strong></td>
+                    <td>
+                        <div class="student-info-cell">
+                            <div class="student-avatar">${initials}</div>
+                            <div>
+                                <strong style="color: var(--text-main); display: block; font-size: 14px;">${s.name}</strong>
+                                <span style="font-size: 11px; color: var(--text-muted);">${s.email}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="course-badge">${s.course}</span></td>
+                    <td>${gpaBadgeHTML}</td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="edit-btn" onclick="editStudent(${s.id})">Edit</button>
+                            <button class="delete-btn" onclick="deleteStudent(${s.id})">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    // Initial load
+    renderTable();
+    updateStats();
+    updateAIInsights();
+</script>
+
+</body>
+</html>
