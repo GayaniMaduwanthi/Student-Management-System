@@ -37,13 +37,7 @@ You can run this project locally without any installation or build tools:
 2. Open the **`index.html`** file in any modern web browser (Google Chrome, Firefox, Edge, Safari).
 3. Start managing student records, exploring the AI insights, and exporting reports!
 
- **Live Demo:** [Click here to view live application](https://your-github-username.github.io/edutrack-student-portal/) *(Replace with your GitHub Pages link)*
-
----
-
-## 📸 Screenshots
-
-*(You can add screenshots or a short GIF of your application here)*
+ **Live Demo:**https://gayanimaduwanthi.github.io/Student-Management-System/
 
 ---
 
